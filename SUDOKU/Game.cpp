@@ -1,8 +1,9 @@
 #include "Game.h"
 
+// Створення вікна з розміром 800x700 пікселів та назвою "Sudoku"
 RenderWindow window(VideoMode(800, 700), "Sudoku", sf::Style::Titlebar | sf::Style::Close);
 
-
+// Конструктор класу Game, який ініціалізує стан гри та завантажує шрифт
 Game::Game()
 {
     state = END;
@@ -13,12 +14,12 @@ Game::Game()
     state = MENU;
 }
 
-
+// Деструктор класу Game
 Game::~Game(void)
 {
 }
 
-
+// Основний цикл гри, який обробляє різні стани гри
 void Game::runGame()
 {
     while (state != END)
@@ -38,7 +39,7 @@ void Game::runGame()
     }
 }
 
-
+// Функція для обробки головного меню гри
 void Game::menu()
 {
     Text title("Sudoku", font, 80);
@@ -46,7 +47,6 @@ void Game::menu()
     title.setPosition(800 / 2 - title.getGlobalBounds().width / 2, 60);
 
     const int ile = 3;
-
     Text tekst[ile];
     string str[] = { "Play", "Rules", "Exit" };
 
@@ -56,7 +56,7 @@ void Game::menu()
         tekst[i].setCharacterSize(65);
         tekst[i].setString(str[i]);
         tekst[i].setPosition(800 / 2 - tekst[i].getGlobalBounds().width / 2, 200 + i * 120);
-        tekst[i].setFillColor(Color::White); // Установите цвет текста по умолчанию
+        tekst[i].setFillColor(Color::White); // Встановити колір тексту за замовчуванням
     }
 
     while (state == MENU)
@@ -82,9 +82,9 @@ void Game::menu()
         for (int i = 0; i < ile; i++)
         {
             if (tekst[i].getGlobalBounds().contains(mouse))
-                tekst[i].setFillColor(Color::Red); // Измените цвет текста при наведении
+                tekst[i].setFillColor(Color::Red); // Змінити колір тексту при наведенні
             else
-                tekst[i].setFillColor(Color::White); // Цвет текста по умолчанию
+                tekst[i].setFillColor(Color::White); // Колір тексту за замовчуванням
         }
 
         window.clear();
@@ -95,6 +95,7 @@ void Game::menu()
     }
 }
 
+// Функція для вибору рівня складності гри
 void Game::levels()
 {
     sf::Text title("Levels", font, 90);
@@ -111,7 +112,7 @@ void Game::levels()
         text[i].setCharacterSize(65);
         text[i].setString(aut[i]);
         text[i].setPosition(800 / 2 - text[i].getGlobalBounds().width / 2, 150 + i * 120);
-        text[i].setFillColor(sf::Color::White); // Установите цвет текста по умолчанию
+        text[i].setFillColor(sf::Color::White); // Встановити колір тексту за замовчуванням
     }
 
     while (state == GAME && window.isOpen())
@@ -155,9 +156,9 @@ void Game::levels()
         for (int i = 0; i < ile; i++)
         {
             if (text[i].getGlobalBounds().contains(mouse))
-                text[i].setFillColor(sf::Color::Red); // Измените цвет текста при наведении
+                text[i].setFillColor(sf::Color::Red); // Змінити колір тексту при наведенні
             else
-                text[i].setFillColor(sf::Color::White); // Цвет текста по умолчанию
+                text[i].setFillColor(sf::Color::White); // Колір тексту за замовчуванням
         }
 
         window.clear();
@@ -168,6 +169,7 @@ void Game::levels()
     }
 }
 
+// Функція для відображення правил гри
 void Game::rules()
 {
     sf::Text title("Rules", font, 90);
@@ -183,10 +185,9 @@ void Game::rules()
     description.setFillColor(sf::Color::White);
 
     const int ile = 1;
-
     sf::Text text[ile];
-
     std::string rul[] = { "Back" };
+
     for (int i = 0; i < ile; i++)
     {
         text[i].setFont(font);

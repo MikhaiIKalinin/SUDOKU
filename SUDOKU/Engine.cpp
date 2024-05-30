@@ -1,5 +1,6 @@
 #include "Engine.h"
 
+// Конструктор класу Engine, який ініціалізує генератор випадкових чисел і завантажує шрифт
 Engine::Engine()
 {
     srand(time(NULL));
@@ -10,14 +11,17 @@ Engine::Engine()
     state = GAME;
 }
 
+// Деструктор класу Engine
 Engine::~Engine()
 {
 }
 
+// Функція runEngine відповідає за основний цикл гри
 bool Engine::runEngine(RenderWindow& window, int level) {
     int size = 4;
     int index = 0;
 
+    // Створення динамічних двовимірних масивів для зберігання значень та стану блокування клітинок
     int** m = new int* [size];
     for (int i = 0; i < size; i++) {
         m[i] = new int[size];
@@ -28,12 +32,14 @@ bool Engine::runEngine(RenderWindow& window, int level) {
         b[i] = new bool[size];
     }
 
+    // Ініціалізація масиву b значеннями true
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
             b[i][j] = true;
         }
     }
 
+    // Заповнення таблиці та встановлення рівня складності
     fillTable(m, size, window);
     setLevel(m, b, size, level);
 
@@ -44,12 +50,15 @@ bool Engine::runEngine(RenderWindow& window, int level) {
     CellSize = 100;
     FontSize = 50;
 
+    // Основний цикл гри
     while (window.isOpen()) {
         Event event;
 
+        // Обробка подій
         while (window.pollEvent(event) && state == GAME) {
             switch (event.type) {
             case Event::Closed:
+                // Звільнення пам'яті при закритті вікна
                 for (int i = 0; i < size; i++) {
                     delete[] m[i];
                 }
@@ -65,6 +74,7 @@ bool Engine::runEngine(RenderWindow& window, int level) {
 
             case Event::KeyPressed:
                 if ((Keyboard::isKeyPressed(Keyboard::Escape))) {
+                    // Звільнення пам'яті при натисканні Escape
                     for (int i = 0; i < size; i++) {
                         delete[] m[i];
                     }
@@ -77,6 +87,7 @@ bool Engine::runEngine(RenderWindow& window, int level) {
 
                     return false;
                 }
+                // Вибір клітинки
                 selectCell(window, size, index, m, b, input);
                 break;
 
@@ -85,6 +96,7 @@ bool Engine::runEngine(RenderWindow& window, int level) {
             }
         }
 
+        // Очищення вікна і малювання елементів гри
         window.clear();
         drawSquare(window, m, b, size, index);
 
@@ -97,6 +109,7 @@ bool Engine::runEngine(RenderWindow& window, int level) {
 
         window.draw(input.cell);
 
+        // Перевірка на виграш
         if (checkWin(m, size)) {
             state = GAMEOVER;
         }
@@ -110,6 +123,7 @@ bool Engine::runEngine(RenderWindow& window, int level) {
             window.draw(content);
 
             if ((Keyboard::isKeyPressed(Keyboard::Escape))) {
+                // Звільнення пам'яті при натисканні Escape
                 for (int i = 0; i < size; i++) {
                     delete[] m[i];
                 }
@@ -128,6 +142,7 @@ bool Engine::runEngine(RenderWindow& window, int level) {
     return true;
 }
 
+// Перевірка рядка на наявність значення
 bool Engine::checkRow(int** m, int size, int row, int value)
 {
     for (int i = 0; i < size; i++)
@@ -140,6 +155,7 @@ bool Engine::checkRow(int** m, int size, int row, int value)
     return true;
 }
 
+// Перевірка колонки на наявність значення
 bool Engine::checkColumn(int** m, int size, int column, int value)
 {
     for (int i = 0; i < size; i++)
@@ -152,6 +168,7 @@ bool Engine::checkColumn(int** m, int size, int column, int value)
     return true;
 }
 
+// Перевірка квадрата 2x2 на наявність значення
 bool Engine::checkSquare(int** m, int tamanho, int row, int column, int value)
 {
     int quadx = 2, quady = 2;
@@ -175,6 +192,7 @@ bool Engine::checkSquare(int** m, int tamanho, int row, int column, int value)
     return true;
 }
 
+// Перевірка, чи всі елементи масиву false
 bool Engine::removing(bool bol[16], int t)
 {
     for (int i = 0; i < t; i++)
@@ -187,6 +205,7 @@ bool Engine::removing(bool bol[16], int t)
     return true;
 }
 
+// Обробка вибору клітинки та введення значень
 void Engine::selectCell(RenderWindow& window, int size, int& index, int** matrix, bool** bloc, Input& input)
 {
     if (Keyboard::isKeyPressed(Keyboard::Left))
@@ -270,6 +289,7 @@ void Engine::selectCell(RenderWindow& window, int size, int& index, int** matrix
     }
 }
 
+// Перетворення цілого числа в рядок
 string intTOstring(int number)
 {
     if (number == 0)
@@ -288,6 +308,7 @@ string intTOstring(int number)
     return returnvalue;
 }
 
+// Малювання квадратів та заповнення їх значеннями
 void Engine::drawSquare(RenderWindow& window, int** matrix, bool** bloc, int size, int index)
 {
     int quadx = 2, quady = 2;
@@ -367,6 +388,7 @@ void Engine::drawSquare(RenderWindow& window, int** matrix, bool** bloc, int siz
     window.draw(bigSquare);
 }
 
+// Заповнення таблиці значеннями
 void Engine::fillTable(int** m, int& size, RenderWindow& window)
 {
     int val[16];
@@ -424,7 +446,7 @@ void Engine::fillTable(int** m, int& size, RenderWindow& window)
                         i = -1;
                         j = -1;
                         reset = 0;
-                        for (int i2 = 0; i2 < size; i2++)
+                        for (int i2 = 0; i < size; i2++)
                         {
                             for (int j2 = 0; j2 < size; j2++)
                             {
@@ -439,6 +461,7 @@ void Engine::fillTable(int** m, int& size, RenderWindow& window)
     }
 }
 
+// Встановлення рівня складності гри
 void Engine::setLevel(int** m, bool** b, int size, int difficulty)
 {
     int amount;
@@ -478,6 +501,7 @@ void Engine::setLevel(int** m, bool** b, int size, int difficulty)
     }
 }
 
+// Перевірка чи виграв гравець
 bool Engine::checkWin(int** m, int size)
 {
     for (int i = 0; i < size; i++)
